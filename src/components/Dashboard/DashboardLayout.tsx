@@ -7,6 +7,7 @@ import { TelemetryPanel } from "./TelemetryPanel";
 import { RadarDisplay } from "./RadarDisplay";
 import { VideoFeed } from "./VideoFeed";
 import { LogsPanel } from "./LogsPanel";
+import { MapDisplay } from "./MapDisplay";
 import { useWebSocket } from "@/hooks/useWebSocket";
 
 export const DashboardLayout = () => {
@@ -80,6 +81,12 @@ export const DashboardLayout = () => {
           {activeSection === "video-feed" && (
             <div className="max-w-4xl mx-auto">
               <VideoFeed fullscreen />
+            </div>
+          )}
+
+          {activeSection === "map" && (
+            <div className="max-w-6xl mx-auto">
+              <MapDisplay position={telemetryData?.position} fullscreen />
             </div>
           )}
 

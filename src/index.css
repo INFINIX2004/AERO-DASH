@@ -189,3 +189,31 @@ All colors MUST be HSL.
     transform: rotate(360deg);
   }
 }
+
+/* Map styles */
+.custom-drone-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.drone-marker {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drone-icon {
+  font-size: 20px;
+  filter: drop-shadow(0 0 4px hsl(var(--primary)));
+}
+
+.drone-heading {
+  position: absolute;
+  top: -5px;
+  font-size: 16px;
+  color: hsl(var(--primary));
+  transform-origin: center;
+}

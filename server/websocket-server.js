@@ -19,6 +19,11 @@ let telemetryData = {
   pitch: 2.1,
   roll: -1.8,
   yaw: 45.2,
+  position: {
+    latitude: 37.7749, // San Francisco starting position
+    longitude: -122.4194,
+    heading: 45
+  },
   obstacles: [
     { id: '1', angle: 30, distance: 45, type: 'static' },
     { id: '2', angle: 120, distance: 78, type: 'dynamic' },
@@ -72,6 +77,13 @@ const updateTelemetry = () => {
   telemetryData.roll += (Math.random() - 0.5) * 2;
   telemetryData.yaw += (Math.random() - 0.5) * 3;
   telemetryData.signal_strength += (Math.random() - 0.5) * 10;
+  
+  // Update drone position (simulate movement)
+  const movementSpeed = 0.00005; // Small increments for GPS coordinates
+  const direction = telemetryData.position.heading * (Math.PI / 180);
+  telemetryData.position.latitude += Math.cos(direction) * movementSpeed * (Math.random() + 0.5);
+  telemetryData.position.longitude += Math.sin(direction) * movementSpeed * (Math.random() + 0.5);
+  telemetryData.position.heading = telemetryData.heading;
   
   // Keep values in realistic ranges
   telemetryData.altitude = Math.max(0, Math.min(100, telemetryData.altitude));

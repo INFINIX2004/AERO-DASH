@@ -6,7 +6,8 @@ import {
   Video, 
   FileText,
   BarChart3,
-  Home
+  Home,
+  Map
 } from "lucide-react";
 
 interface SidebarProps {
@@ -18,6 +19,7 @@ const navigationItems = [
   { id: "overview", label: "Overview", icon: Home },
   { id: "drone-status", label: "Drone Status", icon: Activity },
   { id: "telemetry", label: "Telemetry", icon: BarChart3 },
+  { id: "map", label: "Map", icon: Map },
   { id: "video-feed", label: "Video Feed", icon: Video },
   { id: "logs", label: "Logs", icon: FileText },
 ];

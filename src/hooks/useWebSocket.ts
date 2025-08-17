@@ -11,6 +11,11 @@ interface TelemetryData {
   pitch: number;
   roll: number;
   yaw: number;
+  position?: {
+    latitude: number;
+    longitude: number;
+    heading: number;
+  };
   obstacles: Array<{
     id: string;
     angle: number;
