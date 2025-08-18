@@ -1,11 +1,11 @@
-import WebSocket from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 import express from 'express';
 
 const app = express();
 const port = 8081;
 
 // Create WebSocket server
-const wss = new WebSocket.Server({ port });
+const wss = new WebSocketServer({ port });
 
 // Mock telemetry data generator
 let telemetryData = {
