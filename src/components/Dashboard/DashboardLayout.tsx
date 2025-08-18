@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Sidebar } from "./Sidebar";
 import { DroneStatusCard } from "./DroneStatusCard";
 import { TelemetryPanel } from "./TelemetryPanel";
@@ -9,10 +10,11 @@ import { VideoFeed } from "./VideoFeed";
 import { LogsPanel } from "./LogsPanel";
 import { MapDisplay } from "./MapDisplay";
 import { useWebSocket } from "@/hooks/useWebSocket";
+import { Power, PowerOff } from "lucide-react";
 
 export const DashboardLayout = () => {
   const [activeSection, setActiveSection] = useState("overview");
-  const { telemetryData, logs, connectionStatus } = useWebSocket();
+  const { telemetryData, logs, connectionStatus, reconnect, disconnect, isManuallyDisconnected } = useWebSocket();
 
   return (
     <div className="min-h-screen bg-background">
@@ -27,11 +29,30 @@ export const DashboardLayout = () => {
           </div>
           
           <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={connectionStatus === 'connected' || connectionStatus === 'connecting' ? disconnect : reconnect}
+              disabled={connectionStatus === 'connecting'}
+              className="flex items-center gap-2"
+            >
+              {connectionStatus === 'connected' ? (
+                <>
+                  <PowerOff className="w-4 h-4" />
+                  Disconnect
+                </>
+              ) : (
+                <>
+                  <Power className="w-4 h-4" />
+                  Connect
+                </>
+              )}
+            </Button>
             <Badge 
               variant={connectionStatus === 'connected' ? 'default' : 'destructive'}
               className={connectionStatus === 'connected' ? 'status-online' : 'status-offline'}
             >
-              {connectionStatus === 'connected' ? 'ONLINE' : 'OFFLINE'}
+              {connectionStatus === 'connected' ? 'ONLINE' : connectionStatus === 'connecting' ? 'CONNECTING' : 'OFFLINE'}
             </Badge>
           </div>
         </div>
@@ -96,6 +117,16 @@ export const DashboardLayout = () => {
             </div>
           )}
         </main>
+      </div>
+      
+      {/* System Active Tag - Fixed to bottom of screen */}
+      <div className="fixed bottom-4 left-4 z-50">
+        <div className="p-3 rounded-lg bg-card/90 backdrop-blur-sm border border-border shadow-lg">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="w-2 h-2 rounded-full bg-success pulse-glow"></div>
+            System Active
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -56,15 +56,6 @@ export const Sidebar = ({ activeSection, onSectionChange }: SidebarProps) => {
           );
         })}
       </nav>
-      
-      <div className="absolute bottom-4 left-4 right-4">
-        <div className="p-3 rounded-lg bg-muted/50 border border-border">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <div className="w-2 h-2 rounded-full bg-success pulse-glow"></div>
-            System Active
-          </div>
-        </div>
-      </div>
     </aside>
   );
 };

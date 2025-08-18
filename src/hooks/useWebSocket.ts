@@ -36,6 +36,7 @@ export const useWebSocket = (url: string = 'ws://localhost:8081') => {
   const [telemetryData, setTelemetryData] = useState<TelemetryData | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('disconnected');
+  const [isManuallyDisconnected, setIsManuallyDisconnected] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -65,12 +66,16 @@ export const useWebSocket = (url: string = 'ws://localhost:8081') => {
 
       wsRef.current.onclose = () => {
         setConnectionStatus('disconnected');
-        addLog('warning', 'CONNECTION', 'WebSocket connection lost. Attempting to reconnect...');
-        
-        // Auto-reconnect after 3 seconds
-        reconnectTimeoutRef.current = setTimeout(() => {
-          connect();
-        }, 3000);
+        if (!isManuallyDisconnected) {
+          addLog('warning', 'CONNECTION', 'WebSocket connection lost. Attempting to reconnect...');
+          
+          // Auto-reconnect after 3 seconds only if not manually disconnected
+          reconnectTimeoutRef.current = setTimeout(() => {
+            connect();
+          }, 3000);
+        } else {
+          addLog('info', 'CONNECTION', 'WebSocket manually disconnected');
+        }
       };
 
       wsRef.current.onerror = (error) => {
@@ -101,8 +106,26 @@ export const useWebSocket = (url: string = 'ws://localhost:8081') => {
     });
   };
 
-  useEffect(() => {
+  const disconnect = () => {
+    setIsManuallyDisconnected(true);
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+    }
+    if (wsRef.current) {
+      wsRef.current.close();
+    }
+    setConnectionStatus('disconnected');
+  };
+
+  const reconnect = () => {
+    setIsManuallyDisconnected(false);
     connect();
+  };
+
+  useEffect(() => {
+    if (!isManuallyDisconnected) {
+      connect();
+    }
 
     return () => {
       if (reconnectTimeoutRef.current) {
@@ -118,6 +141,8 @@ export const useWebSocket = (url: string = 'ws://localhost:8081') => {
     telemetryData,
     logs,
     connectionStatus,
-    reconnect: connect
+    reconnect,
+    disconnect,
+    isManuallyDisconnected
   };
 };
